@@ -1,8 +1,11 @@
 package fr.epita.bankaccount.launchers;
 
-import java.util.Scanner;
+import java.math.BigDecimal;
+import java.util.*;
 
+import fr.epita.bankaccount.datamodel.Account;
 import fr.epita.bankaccount.datamodel.Customer;
+import fr.epita.bankaccount.datamodel.Savings;
 
 public class Launcher {
 
@@ -19,6 +22,20 @@ public class Launcher {
         Customer customer = new Customer();
         customer.setName(customerName);
         customer.setAddress(customerAddress);
+
+
+        //
+        Account account = new Account();
+        account.setBalance(BigDecimal.valueOf(20.0));
+        Set<Account> accounts = new LinkedHashSet<>();
+        accounts.add(account);
+
+        Savings savings = new Savings();
+        accounts.add(savings);
+
+
+        customer.setAccountList(accounts);
+
 
         System.out.println(customer);
 

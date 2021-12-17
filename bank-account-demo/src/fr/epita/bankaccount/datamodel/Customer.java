@@ -1,10 +1,23 @@
 package fr.epita.bankaccount.datamodel;
 
-import java.util.Objects;
+import java.util.*;
 
 public class Customer {
     private String name;
     private String address;
+    private Set<Account> accountList = new LinkedHashSet<>();
+
+    public Set<Account> getAccountList() {
+        return new LinkedHashSet<>(accountList);
+    }
+
+    public void setAccountList(Set<Account> accountList) {
+        this.accountList.addAll(accountList);
+    }
+
+    public void addAccount(Account account) {
+        this.accountList.add(account);
+    }
 
     public String getName() {
         return name;
