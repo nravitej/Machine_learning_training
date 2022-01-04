@@ -1,56 +1,74 @@
 package fr.epita.titanic.tests;
 
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+
+import fr.epita.titanic.datamodel.Passenger;
+import fr.epita.titanic.services.GenericCSVReader;
 
 public class TestCSVReading {
 
-    public static void main(String[] args) {
-        String line = "892,3,\"Kelly, , Mr. James\",male,34.5,0,0,330911,7.8292,,Q";
+    public static final String DELIM = ",";
+    public static final String ESCAPE_CHAR = "\"";
 
-        String[] values = line.split(",");
-        char[] chars = line.toCharArray();
-        String currentColumnValue = "";
+    public static void main(String[] args) throws IOException {
 
-
-        List<String> columnsValues = new ArrayList<>();
-        for (int i = 0, charsLength = chars.length; i < charsLength; i++) {
-            boolean escapedColumn = false;
-            char currentChar = chars[i];
-            char nextChar = 0;
-            if (i + 1  < charsLength){
-                nextChar = chars[i+1];
-            }
-
-            if (currentChar == ',') {
-                if (nextChar == '"'){
-                    escapedColumn = true;
-                    i++;
-                }else {
-                    if (!escapedColumn) {
-                        columnsValues.add(currentColumnValue);
-                        currentColumnValue = "";
-                        if (!(i + 1 >= charsLength)){
-                            currentChar = chars[++i];
-                        }
-
-                    }
-                }
-            }
-            if (currentChar == '"'){
-                if (nextChar == ','){
-                    columnsValues.add(currentColumnValue);
-                    currentColumnValue = "";
-                    escapedColumn = false;
-                    i++;
-                }
-            }
-            currentColumnValue += currentChar;
-        }
+        GenericCSVReader csvReader = new GenericCSVReader(DELIM, ESCAPE_CHAR);
+        //unit test
+        List<String> columnsValues = csvReader.extractColumnValues("892,3,\"Kelly, ,Mr. James\",male,34.5,0,0,330911,7.8292,,Q");
         System.out.println(columnsValues);
+        //unit test
+        columnsValues = csvReader.extractColumnValues("\"Kelly, ,Mr. James\",892,3,male,34.5,0,0,330911,7.8292,,Q");
+        System.out.println(columnsValues);
+        System.out.println(columnsValues.size());
 
+        //global test
+        List<String> lines = Files.readAllLines(Path.of("S:\\Work\\ae\\Epita\\workspaces\\2021-t3-java-uml-ais\\titanic-training\\test.csv"));
+        List<String> errorLines = new ArrayList<>();
+        for (String line : lines){
+            try {
+                System.out.println(csvReader.extractColumnValues(line));
+            }catch (Exception e){
+                errorLines.add(line);
+            }
+        }
+        lines = Files.readAllLines(Path.of("S:\\Work\\ae\\Epita\\workspaces\\2021-t3-java-uml-ais\\titanic-training\\train.csv"));
+
+        for (String line : lines){
+            try {
+                System.out.println(csvReader.extractColumnValues(line));
+            }catch (Exception e){
+                errorLines.add(line);
+            }
+        }
+
+        System.out.println("errors: " +errorLines);
+
+
+
+    }
+
+
+
+
+
+
+    public static boolean detectEscapedColumn(String remainingString, String delim, String escapeString) {
+        boolean match = true;
+        String startToken  = delim + escapeString;
+        for (int i = 0; i < delim.length(); i++) {
+            if (i <= remainingString.length() - 1) {
+                match &= startToken.charAt(i) == remainingString.charAt(i);
+            } else {
+                return false;
+            }
+        }
+        return match;
     }
 
 }
