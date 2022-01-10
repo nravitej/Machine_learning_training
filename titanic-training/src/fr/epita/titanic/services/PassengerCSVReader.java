@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
-
+import java.lang.*;
 import fr.epita.titanic.datamodel.Passenger;
 
 public class PassengerCSVReader {
@@ -16,22 +16,52 @@ public class PassengerCSVReader {
           try {
                List<String> lines = Files.readAllLines(file.toPath());
                for (String line: lines){
-                    line = line.replaceAll(",",";");
-                    line =   line.replaceAll("; ", ", ");
-                    String[] split = line.split(";");
+                    try {
+                         line = line.replaceAll(",", ";");
+                         line = line.replaceAll("; ", ", ");
+                         String[] split = line.split(";");
 
-                    Passenger instance = new Passenger();
-                    instance.setPassengerId(Integer.parseInt(split[0]));
-                    instance.setpClass(Integer.parseInt(split[1]));
-                    instance.setName(split[2]);
-                    instance.setSex(split[3]);
-                    instance.setAge(Double.parseDouble(split[4]));
-                    //to be completed
+                         Passenger instance = new Passenger();
+                         try {
+                              instance.setPassengerId(Integer.parseInt(split[0]));
+                         }catch(NumberFormatException e)
+                         {
+                              instance.setPassengerId(0);
+                         }
+                         try {
 
-                    passengers.add(instance);
+                              instance.setSurvived(Integer.parseInt(split[1]));
+                         }catch(NumberFormatException e)
+                         {
+                              instance.setSurvived(0);
+                         }
+                         try {
+                              instance.setPclass(Integer.parseInt(split[2]));
+                         }catch(NumberFormatException e)
+                         {
+                              instance.setPclass(0);
+                         }
+                         instance.setName(split[3]);
+                         instance.setSex(split[4]);
+                         try {
+                              instance.setAge(Double.parseDouble(split[5]));
+                         }
+                         catch(NumberFormatException e)
+                         {
+                              instance.setAge(0.0);
+                         }
+                         //to be completed
+
+                         passengers.add(instance);
+                    }
+                    catch(NumberFormatException e)
+                    {
+                         System.out.println(line);
+                         e.printStackTrace();
+                    }
                }
           } catch (IOException e) {
-               e.printStackTrace();
+               System.out.println("Header");
           }
 
 

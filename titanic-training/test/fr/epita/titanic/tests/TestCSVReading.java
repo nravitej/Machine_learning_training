@@ -27,8 +27,9 @@ public class TestCSVReading {
         System.out.println(columnsValues);
         System.out.println(columnsValues.size());
 
-        //global test
-        List<String> lines = Files.readAllLines(Path.of("S:\\Work\\ae\\Epita\\workspaces\\2021-t3-java-uml-ais\\titanic-training\\test.csv"));
+        //global test titanic-training/test.csv
+        //List<String> lines = Files.readAllLines(Path.of("S:\\Work\\ae\\Epita\\workspaces\\2021-t3-java-uml-ais\\titanic-training\\test.csv"));
+        List<String> lines = Files.readAllLines(Path.of("titanic-training/test.csv"));
         List<String> errorLines = new ArrayList<>();
         for (String line : lines){
             try {
@@ -37,7 +38,7 @@ public class TestCSVReading {
                 errorLines.add(line);
             }
         }
-        lines = Files.readAllLines(Path.of("S:\\Work\\ae\\Epita\\workspaces\\2021-t3-java-uml-ais\\titanic-training\\train.csv"));
+        lines = Files.readAllLines(Path.of("titanic-training/train.csv"));
 
         for (String line : lines){
             try {

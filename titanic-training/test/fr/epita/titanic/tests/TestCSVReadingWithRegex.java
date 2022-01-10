@@ -17,7 +17,7 @@ public class TestCSVReadingWithRegex {
 
         Passenger instance = new Passenger();
         instance.setPassengerId(Integer.parseInt(split[0]));
-        instance.setpClass(Integer.parseInt(split[1]));
+        instance.setPclass(Integer.parseInt(split[1]));
         instance.setName(split[2]);
         instance.setSex(split[3]);
         instance.setAge(Double.parseDouble(split[4]));
